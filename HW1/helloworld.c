@@ -16,7 +16,7 @@
 #pragma config POSCMOD = 10 // high speed crystal mode, 10 = HS Oscillator mode is selected
 #pragma config OSCIOFNC = 1 // disable secondary osc, 1 = CLKO output disabled
 #pragma config FPBDIV = 00 // divide sysclk freq by 1 for peripheral bus clock, 00 = PBCLK is SYSCLK divided by 1
-#pragma config FCKSM = 1x // do not enable clock switch, 1x = Clock switching is disabled, Fail-Safe Clock Monitor is disabled
+#pragma config FCKSM = 1 // do not enable clock switch, 1x = Clock switching is disabled, Fail-Safe Clock Monitor is disabled
 #pragma config WDTPS = 10100 // use slowest wdt??
 #pragma config WINDIS = 1 // wdt no window mode,1 = Watchdog Timer is in non-Window mode
 #pragma config FWDTEN = 0 // wdt disabled, 0 = Watchdog Timer is not enabled; it can be enabled in software
@@ -36,74 +36,35 @@
 #pragma config FUSBIDIO = 1 // USB pins controlled by USB module, 1 = USBID pin is controlled by the USB module
 #pragma config FVBUSONIO = 1 // USB BUSON controlled by USB module. 1 = VBUSON pin is controlled by the USB module
 
-void delay(void);
 
 int main() {
-
+    
+    TRISBbits.TRISB4=1; //set pushbutton as input pin
+    TRISAbits.TRISA4=0; //set LED as output
+    
     __builtin_disable_interrupts();
-
+    
     // set the CP0 CONFIG register to indicate that kseg0 is cacheable (0x3)
     __builtin_mtc0(_CP0_CONFIG, _CP0_CONFIG_SELECT, 0xa4210583);
-
+    
     // 0 data RAM access wait states
     BMXCONbits.BMXWSDRM = 0x0;
-
+    
     // enable multi vector interrupts
     INTCONbits.MVEC = 0x1;
-
+    
     // disable JTAG to get pins back
     DDPCONbits.JTAGEN = 0;
-
+    
     // do your TRIS and LAT commands here
-
+    
     __builtin_enable_interrupts();
-
-
-    while(1) {
-	    // use _CP0_SET_COUNT(0) and _CP0_GET_COUNT() to test the PIC timing
-		  // remember the core timer runs at half the sysclk
-    }
-}
-
-
-
-#include <xc.h>          // Load the proper header for the processor
-
-void delay(void);
-
-int main(void) {
-    TRISF = 0xFFFC;        // Pins 0 and 1 of Port F are LED1 and LED2.  Clear
-    // bits 0 and 1 to zero, for output.  Others are inputs.
-    LATFbits.LATF0 = 0;    // Turn LED1 on and LED2 off.  These pins sink current
-    LATFbits.LATF1 = 1;    // on the NU32, so "high" (1) = "off" and "low" (0) = "on"
     
     while(1) {
-        delay();
-        LATFINV = 0x0003;    // toggle LED1 and LED2; same as LATFINV = 0x3;
-    }
-    return 0;
-}
-
-void delay(void) {
-    int j;
-    for (j = 0; j < 1000000; j++) { // number is 1 million
-        while(!PORTDbits.RD7) {
-            ;   // Pin D7 is the USER switch, low (FALSE) if pressed.
-        }
+        // use _CP0_SET_COUNT(0) and _CP0_GET_COUNT() to test the PIC timing
+        // remember the core timer runs at half the sysclk
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
