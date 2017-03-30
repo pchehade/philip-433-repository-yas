@@ -38,10 +38,9 @@
 
 
 int main() {
-    
+    // Output pins
     TRISBbits.TRISB4=1; //set pushbutton as input pin
     TRISAbits.TRISA4=0; //set LED as output
-    
     __builtin_disable_interrupts();
     
     // set the CP0 CONFIG register to indicate that kseg0 is cacheable (0x3)
@@ -61,15 +60,20 @@ int main() {
     __builtin_enable_interrupts();
     
     while(1) {
-        // use _CP0_SET_COUNT(0) and _CP0_GET_COUNT() to test the PIC timing
-        // remember the core timer runs at half the sysclk
+        int time,stop;
+        LATAbits.LATA4= 1;
+        _CP0_SET_COUNT(0);
+        while(_CP0_GET_COUNT()<12000) {
+        }
+        LATAbits.LATA4=0;
+        time=_CP0_GET_COUNT();
+        stop=time+12000;
+        while (_CP0_GET_COUNT()<stop){
+        }
+        LATAbits.LATA4=0;
+        
     }
+    
 }
-
-
-
-
-
-
 
 
