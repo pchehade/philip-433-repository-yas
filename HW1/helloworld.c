@@ -60,7 +60,16 @@ int main() {
     __builtin_enable_interrupts();
     
     while(1) {
+        
+        
         int time,stop;
+        int j;
+        //for (j = 0; j < 1000000; j++) { // number is 1 million
+        while(!PORTBbits.RB4) {
+            // Pin D7 is the USER switch, low (FALSE) if pressed.
+        }
+        
+        
         LATAbits.LATA4= 1;
         _CP0_SET_COUNT(0);
         while(_CP0_GET_COUNT()<12000) {
@@ -72,8 +81,10 @@ int main() {
         }
         LATAbits.LATA4=0;
         
+        
     }
     
 }
+
 
 
