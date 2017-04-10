@@ -66,9 +66,8 @@ int main() {
         int j;
         //for (j = 0; j < 1000000; j++) { // number is 1 million
         while(!PORTBbits.RB4) {
-            // Pin D7 is the USER switch, low (FALSE) if pressed.
+            
         }
-        
         
         LATAbits.LATA4= 1;
         _CP0_SET_COUNT(0);
